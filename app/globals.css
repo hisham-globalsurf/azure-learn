@@ -1,26 +1,354 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import "tailwindcss"; 
+ 
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+  --breakpoint-3xl: 1601px;
+  
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+@font-face {
+  font-family: "ITC Avant Book";
+  src: url("/assets/fonts/ITC-Avant-Book.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 74%;
+  descent-override: 26%;
+  line-gap-override: 20%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@font-face {
+  font-family: "ITC Avant Medium";
+  src: url("/assets/fonts/ITC-Avant-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 74%;
+  descent-override: 26%;
+  line-gap-override: 20%;
+}
+
+
+/* scrollbar hide */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Override: show scrollbar only inside elements with this class */
+.show-scrollbar::-webkit-scrollbar {
+  display: block;
+  width: 6px;
+}
+.show-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin-right: 4px;
+}
+
+.show-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #BFBFBF;
+  border-radius: 0 5px 5px 0;
+}
+
+/* Firefox uses a different property entirely, not ::-webkit-scrollbar */
+.show-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #BFBFBF transparent;
+}
+
+html {
+  scrollbar-width: none;
+}
+html {
+  -ms-overflow-style: none;
+}
+
+/* stop any browser from faux-bolding the font style */
+body {
+  font-synthesis-weight: none;
+}
+
+/* input autofill bg-remove */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: var(--autofill-text-color, #7c7c7c) !important;
+  caret-color: var(--autofill-text-color, #7c7c7c);
+  transition: background-color 5000s ease-in-out 0s;
+}
+/* custom scrollbar hide */
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
+/* ---------- Variables ---------- */
+:root {
+--background: #ffffff;
+--cream-background: #F5F5F5;
+--primary: #0A0A0A;
+--secondary: #BFBFBF;
+--description-color: #6B6B70;
+
+
+/* 60px → 26px at 420px, 60px at 1920px */
+--text-60: clamp(34px, 1.73333vw + 26.73px, 60px);
+
+
+/* 55px → 30px at 420px, 55px at 1920px */
+--text-55: clamp(30px, 1.667vw + 23px, 55px);
+
+/* 28px → 20px at 420px, 28px at 1920px */
+--text-28: clamp(20px, 0.526vw + 17.895px, 28px);
+
+/* 25px → 13px at 420px, 25px at 1920px */
+--text-24: clamp(13px, 0.8vw + 8px, 24px);
+
+/* 20px → 12px at 420px, 20px at 1920px */
+--text-20: clamp(11px, calc(0.6429vw + 8.4286px), 20px);
+
+/* 19px → 14px at 420px, 19px at 1920px */
+--text-19: clamp(14px, 0.333vw + 12.6px, 19px);
+
+/* 18px → 13px at 420px, 18px at 1920px */
+--text-18: clamp(11px, 0.4902vw + 9.039px, 18px);
+
+/* 16px → 13px at 420px, 16px at 1920px */
+--text-16: clamp(13px, 0.2vw + 12.16px, 16px);
+
+/* 15px → 12px at 420px, 15px at 1400px */
+--text-15: clamp(12px, 0.31vw + 10.7px, 15px);
+
+
+
+
+/* 300px → 100px at 420px, 300px at 1920px */
+--space-300: clamp(127px, 15.4vw + 44px, 300px);
+
+/* 200px → 80px at 390px, 200px at 1810px */
+--space-200: clamp(80px, 8.45vw + 47px, 200px);
+
+/* 190px → 70px at 420px, 190px at 1920px */
+--space-190: clamp(70px, 7.87vw - 1.2px, 190px);
+
+/* 170px → 65px at 420px, 170px at 1920px */
+--space-170: clamp(65px, 7.03vw - 0.6px, 170px);
+
+/* 150px → 60px at 420px, 150px at 1820px */
+--space-150: clamp(60px, 6.52vw + 32.6px, 150px);
+
+/* 140px → 50px at 420px, 140px at 1820px */
+--space-140: clamp(50px, 6.52vw + 22.6px, 140px);
+
+/* 130px → 50px at 320px, 130px at 1800px */
+--space-130: clamp(50px, 5.7143vw + 27.143px, 130px);
+
+/* 120px → 48px at 390px, 120px at 1810px */
+--space-120: clamp(48px, 5.07vw + 28.23px, 120px);
+
+/* 100px → 40px at 390px, 100px at 1810px */
+--space-100: clamp(40px, 4.255vw + 22.98px, 100px);
+
+/* 90px → 40px at 400px, 90px at 1810px */
+--space-90: clamp(40px, 3.546vw + 25.82px, 90px);
+
+/* 80px → 40px at 420px, 80px at 1820px */
+--space-80: clamp(40px, 2.9vw + 27.8px, 80px);
+
+/* 70px → 35px at 420px, 70px at 1820px */
+--space-70: clamp(35px, 2.54vw + 24.3px, 70px);
+
+/* 60px → 30px at 420px, 60px at 1820px */
+--space-60: clamp(40px, 1.4286vw + 33.997px, 60px);
+
+/* 50px → 28px at 390px, 50px at 1810px */
+--space-50: clamp(30px, 1.55vw + 21.9px, 50px);
+
+/* 40px → 30px at 420px, 40px at 1820px */
+--space-40: clamp(30px, 0.72vw + 26.9px, 40px);
+
+/* 30px → 20px at 420px, 30px at 1820px */
+--space-30: clamp(20px, 0.714vw + 17px, 30px);
+
+/* 20px → 10px at 420px, 20px at 1820px */
+--space-20: clamp(10px, 1.1364vw + 5.4545px, 20px);
+}
+
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-border-color: var(--border-color);
+  --color-background: var(--background);
+  --color-cream-background: var(--cream-background);
+  --color-description-color: var(--description-color);
+
+  --font-itc-book: "ITC Avant Book", serif;
+  --font-itc-medium: "ITC Avant Medium", serif;
+
+
+  --text-60: var(--text-60);
+  --text-55: var(--text-55);
+  --text-28: var(--text-28);
+  --text-24: var(--text-24);
+  --text-20: var(--text-20);
+  --text-19: var(--text-19);
+  --text-18: var(--text-18);
+  --text-16: var(--text-16);
+  --text-15: var(--text-15);
+   
+  --spacing-300: var(--space-300);
+  --spacing-200: var(--space-200);
+  --spacing-190: var(--space-190);
+  --spacing-170: var(--space-170);
+  --spacing-150: var(--space-150);
+  --spacing-140: var(--space-140);
+  --spacing-130: var(--space-130);
+  --spacing-120: var(--space-120);
+  --spacing-100: var(--space-100);
+  --spacing-90: var(--space-90);
+  --spacing-80: var(--space-80);
+  --spacing-70: var(--space-70);
+  --spacing-60: var(--space-60);
+  --spacing-50: var(--space-50);
+  --spacing-40: var(--space-40);
+  --spacing-30: var(--space-30);
+  --spacing-20: var(--space-20);
+}
+
+
+/* ---------- Base Styles ---------- */
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--primary);
+  font-family: var(--font-itc-book);
+}
+
+.container {
+  @apply mx-auto w-full px-[16px] xl:px-[15px];
+}
+ 
+@media (min-width: 640px) {
+  .container { max-width: 600px; }
+}
+ 
+@media (min-width: 720px) {
+  .container { max-width: 680px; }
+}
+ 
+@media (min-width: 768px) {
+  .container { max-width: 740px; }
+}
+ 
+@media (min-width: 820px) {
+  .container { max-width: 800px; }
+}
+ 
+@media (min-width: 860px) {
+  .container { max-width: 840px; }
+}
+ 
+@media (min-width: 920px) {
+  .container { max-width: 890px; }
+}
+ 
+@media (min-width: 960px) {
+  .container { max-width: 900px; }
+}
+ 
+@media (min-width: 1024px) {
+  .container { max-width: 960px; }
+}
+ 
+@media (min-width: 1100px) {
+  .container { max-width: 1050px; }
+}
+ 
+@media (min-width: 1140px) {
+  .container { max-width: 1100px; }
+}
+ 
+@media (min-width: 1280px) {
+  .container { max-width: 1210px; }
+}
+ 
+@media (min-width: 1340px) {
+  .container { max-width: 1280px; }
+}
+ 
+@media (min-width: 1440px) {
+  .container { max-width: 1390px; }
+}
+ 
+@media (min-width: 1500px) {
+  .container { max-width: 1440px; }
+}
+ 
+@media (min-width: 1600px) {
+  .container { max-width: 1540px; }
+}
+ 
+@media (min-width: 1700px) {
+  .container { max-width: 1640px; }
+}
+
+@media screen and (min-width: 1800px) {
+  .container { max-width: 1740px; }
+}
+
+@media screen and (min-width: 1850px) {
+  .container { max-width: 1790px; }
+}
+ 
+@media (min-width: 1900px) {
+  .container { max-width: 1850px; }
+}
+
+
+@utility hero-title {
+  @apply text-60 leading-[1.23529412] md:leading-[1.08333333] font-itc-book tracking-[-0.01em];
+}
+
+@utility section-title {
+  @apply text-55 leading-[1.33333333] md:leading-[1.18181818] font-itc-book tracking-[-0.01em];
+}
+
+@utility text-description {
+  @apply text-18 leading-[1.54545455] md:leading-[1.38888889] font-itc-medium tracking-[-0.01em];
+}
+
+@utility text-description-2 {
+  @apply text-20 leading-[1.54545455] md:leading-[1.6] font-itc-medium tracking-[-0.01em];
+}
+
+@utility text-description-3 {
+  @apply text-18 leading-[1.54545455] md:leading-[1.38888889] font-itc-book tracking-[-0.01em];
+}
+
+@utility text-description-4 {
+  @apply text-18 leading-[1.54545455] md:leading-[1.55555556] font-itc-medium tracking-[-0.01em];
+}
+
+@utility text-description-5 {
+  @apply text-20 leading-[1.4] font-itc-book -tracking-[0.01em];
+}
+
+@utility text-subtitle {
+  @apply text-28 leading-[1.3] md:leading-[1.35714286] font-itc-book tracking-[-0.01em];
+}
+
+@utility text-subtitle-2 {
+  @apply text-16 leading-[100%] font-itc-medium tracking-[-0.01em];
+}
+
+@utility text-subtitle-3 {
+  @apply text-20 leading-[1.4] font-itc-medium tracking-[-0.01em];
 }
