@@ -102,7 +102,7 @@ export default function HomePage() {
     <div className="flex flex-col gap-5">
       <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
         {/* First Section */}
-        <AdminItemContainer>
+        <AdminItemContainer expansion={false}>
           <Label
             main
             isHidden={watch("firstSection.isHidden")}
