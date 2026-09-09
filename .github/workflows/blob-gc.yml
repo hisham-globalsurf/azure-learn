@@ -1,0 +1,35 @@
+name: Blob garbage collection
+
+on:
+  schedule:
+    # 03:17 UTC every Monday. Off-peak; adjust as needed.
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: "Dry run (GET) instead of deleting (POST)"
+        type: boolean
+        default: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger sweep
+        env:
+          # Repo secrets:
+          #   BLOB_GC_URL     e.g. https://azure-learn.azurewebsites.net/api/admin/blob-gc
+          #   BLOB_GC_SECRET  same value as the app's BLOB_GC_SECRET env var
+          BLOB_GC_URL: ${{ secrets.BLOB_GC_URL }}
+          BLOB_GC_SECRET: ${{ secrets.BLOB_GC_SECRET }}
+          METHOD: ${{ (github.event_name == 'workflow_dispatch' && inputs.dryRun) && 'GET' || 'POST' }}
+        run: |
+          echo "Calling $METHOD $BLOB_GC_URL"
+          code=$(curl -sS -o response.json -w '%{http_code}' \
+            -X "$METHOD" \
+            -H "Authorization: Bearer $BLOB_GC_SECRET" \
+            "$BLOB_GC_URL")
+          echo "HTTP $code"
+          cat response.json
+          echo
+          test "$code" -ge 200 -a "$code" -lt 300

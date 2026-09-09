@@ -13,11 +13,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased overflow-hidden`}>
-        <Toaster />
-        {children}
-      </body>
-    </html>
+    <div className={`antialiased overflow-hidden`}>
+      <Toaster />
+      {children}
+    </div>
   );
 }

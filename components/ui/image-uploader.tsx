@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Upload, X, Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -30,11 +30,6 @@ export function ImageUploader({
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [localImageUrl, setLocalImageUrl] = useState<string | null>(null);
-  const [isUploadComplete, setIsUploadComplete] = useState(false);
-
-  useEffect(() => {
-    setIsUploadComplete(!!value);
-  }, [value]);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -44,7 +39,6 @@ export function ImageUploader({
       try {
         setIsUploading(true);
         setError(null);
-        setIsUploadComplete(false);
 
         const formData = new FormData();
         formData.append("file", file);
@@ -61,13 +55,9 @@ export function ImageUploader({
         }
 
         const data = await response.json();
-        setLocalImageUrl(data.url);
         onChange(data.url, file);
-        setIsUploadComplete(true);
-
-        if (deleteAfterUpload) {
-          setLocalImageUrl(null);
-          setIsUploadComplete(false);
+        if (!deleteAfterUpload) {
+          setLocalImageUrl(data.url);
         }
       } catch (err) {
         setLocalImageUrl(null);
@@ -76,7 +66,7 @@ export function ImageUploader({
         setIsUploading(false);
       }
     },
-    [onChange],
+    [onChange, deleteAfterUpload],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -88,37 +78,28 @@ export function ImageUploader({
     multiple: multiple,
   });
 
-  const removeImage = async () => {
-    if (!displayUrl) return;
-
-    const response = await fetch("/api/admin/delete-image", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: displayUrl }),
-    });
-
-    if (response.ok) {
-      setLocalImageUrl(null);
-      setIsUploadComplete(false);
-      onChange("", undefined);
-      toast.success("Image deleted successfully");
-    } else {
-      setLocalImageUrl(null);
-      setIsUploadComplete(false);
-      onChange("", undefined);
-    }
-  };
-
   const displayUrl = localImageUrl || value;
+  const showPreview = !isUploading && !deleteAfterUpload && !!displayUrl;
+
+  const removeImage = () => {
+    // Purely clears the field. No blob is deleted here — the image only really
+    // goes away when the form is submitted without it and the blob
+    // garbage-collector later reclaims the now-unreferenced file. This is what
+    // keeps the DB reference and storage from ever drifting apart, even if the
+    // page is refreshed before submit.
+    setLocalImageUrl(null);
+    onChange("", undefined);
+    toast.success("Image removed");
+  };
 
   return (
     <div className={cn("space-y-4 w-full", className)}>
-      {displayUrl && isUploadComplete ? (
+      {showPreview ? (
         <div
           className={`relative w-full max-w-[300px] aspect-[4/3] overflow-hidden rounded-lg border border-black/20 ${isLogo ? "max-w-[100px] h-[100px] bg-black" : "max-w-[300px]"}`}
         >
           <Image
-            src={value ? value : displayUrl}
+            src={displayUrl as string}
             alt="Uploaded image"
             className={isLogo ? "object-contain p-2 bg-black" : "object-cover"}
             fill
