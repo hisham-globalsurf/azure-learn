@@ -89,7 +89,7 @@ export function ImageUploader({
     // page is refreshed before submit.
     setLocalImageUrl(null);
     onChange("", undefined);
-    toast.success("Image removed");
+    // toast.success("Image removed");
   };
 
   return (
