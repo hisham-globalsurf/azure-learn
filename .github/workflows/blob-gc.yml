@@ -2,8 +2,8 @@ name: Blob garbage collection
 
 on:
   schedule:
-    # 03:17 UTC every Monday. Off-peak; adjust as needed.
-    - cron: "17 3 * * 1"
+    # 21:30 UTC every Saturday = 3:00 AM IST every Sunday
+    - cron: "30 21 * * 6"
   workflow_dispatch:
     inputs:
       dryRun:
@@ -18,8 +18,6 @@ jobs:
       - name: Trigger sweep
         env:
           # Repo secrets:
-          #   BLOB_GC_URL     e.g. https://azure-learn.azurewebsites.net/api/admin/blob-gc
-          #   BLOB_GC_SECRET  same value as the app's BLOB_GC_SECRET env var
           BLOB_GC_URL: ${{ secrets.BLOB_GC_URL }}
           BLOB_GC_SECRET: ${{ secrets.BLOB_GC_SECRET }}
           METHOD: ${{ (github.event_name == 'workflow_dispatch' && inputs.dryRun) && 'GET' || 'POST' }}
